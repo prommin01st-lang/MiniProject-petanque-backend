@@ -4,6 +4,7 @@ using JWTdemo.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JWTdemo.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    partial class UserDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251111030914_AddArticleLikeTable")]
+    partial class AddArticleLikeTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,36 +57,6 @@ namespace JWTdemo.Migrations
                     b.ToTable("Articles");
                 });
 
-            modelBuilder.Entity("JWTdemo.Entities.ArticleComment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ArticleId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ArticleId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ArticleComments");
-                });
-
             modelBuilder.Entity("JWTdemo.Entities.ArticleLike", b =>
                 {
                     b.Property<int>("Id")
@@ -105,65 +78,6 @@ namespace JWTdemo.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("ArticleLikes");
-                });
-
-            modelBuilder.Entity("JWTdemo.Entities.Conversation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("User1Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("User2Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("User1Id");
-
-                    b.HasIndex("User2Id");
-
-                    b.ToTable("Conversations");
-                });
-
-            modelBuilder.Entity("JWTdemo.Entities.Message", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ConversationId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("SenderId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("SentAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ConversationId");
-
-                    b.HasIndex("SenderId");
-
-                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("JWTdemo.Entities.Notification", b =>
@@ -251,38 +165,6 @@ namespace JWTdemo.Migrations
                     b.ToTable("TodoListCategories");
                 });
 
-            modelBuilder.Entity("JWTdemo.Entities.Transaction", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Transactions");
-                });
-
             modelBuilder.Entity("JWTdemo.Entities.User", b =>
                 {
                     b.Property<Guid>("id")
@@ -368,25 +250,6 @@ namespace JWTdemo.Migrations
                     b.Navigation("Author");
                 });
 
-            modelBuilder.Entity("JWTdemo.Entities.ArticleComment", b =>
-                {
-                    b.HasOne("JWTdemo.Entities.Article", "Article")
-                        .WithMany()
-                        .HasForeignKey("ArticleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("JWTdemo.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Article");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("JWTdemo.Entities.ArticleLike", b =>
                 {
                     b.HasOne("JWTdemo.Entities.Article", "Article")
@@ -404,44 +267,6 @@ namespace JWTdemo.Migrations
                     b.Navigation("Article");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("JWTdemo.Entities.Conversation", b =>
-                {
-                    b.HasOne("JWTdemo.Entities.User", "User1")
-                        .WithMany()
-                        .HasForeignKey("User1Id")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("JWTdemo.Entities.User", "User2")
-                        .WithMany()
-                        .HasForeignKey("User2Id")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("User1");
-
-                    b.Navigation("User2");
-                });
-
-            modelBuilder.Entity("JWTdemo.Entities.Message", b =>
-                {
-                    b.HasOne("JWTdemo.Entities.Conversation", "Conversation")
-                        .WithMany("Messages")
-                        .HasForeignKey("ConversationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("JWTdemo.Entities.User", "Sender")
-                        .WithMany()
-                        .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Conversation");
-
-                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("JWTdemo.Entities.TodoItem", b =>
@@ -466,17 +291,6 @@ namespace JWTdemo.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("JWTdemo.Entities.Transaction", b =>
-                {
-                    b.HasOne("JWTdemo.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("JWTdemo.Entities.UserNotificationStatus", b =>
                 {
                     b.HasOne("JWTdemo.Entities.Notification", "Notification")
@@ -494,11 +308,6 @@ namespace JWTdemo.Migrations
                     b.Navigation("Notification");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("JWTdemo.Entities.Conversation", b =>
-                {
-                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("JWTdemo.Entities.TodoListCategory", b =>
